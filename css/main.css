@@ -264,6 +264,7 @@ kbd {
   border: 1px solid #ccc;
   border-radius: 0.2em;
   box-shadow: 0.1em 0.1em 0.2em rgba(0,0,0,0.1);
+  color: #555;
   font-family: inherit;
   padding: 0.1em 0.3em;
   white-space: nowrap;
@@ -1162,7 +1163,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #a40e45;
+  background: #ffd6f4;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1493,7 +1494,7 @@ pre .javascript .function {
     font-size: 1.125em;
   }
 }
-.post-body span.exturl .fa {
+.post-body .exturl .fa {
   font-size: 0.875em;
   margin-left: 4px;
 }
