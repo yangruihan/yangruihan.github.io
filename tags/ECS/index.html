@@ -24,26 +24,26 @@
   <meta name="description" content="杨睿涵的个人博客">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Yrh&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:url" content="http://yoursite.com/tags/ECS/index.html">
 <meta property="og:site_name" content="Yrh&#39;s Blog">
 <meta property="og:description" content="杨睿涵的个人博客">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="Yang Ruihan">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/">
+<link rel="canonical" href="http://yoursite.com/tags/ECS/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
+    isHome : false,
     isPost : false
   };
 </script>
 
-  <title>Yrh's Blog</title>
+  <title>标签: ECS | Yrh's Blog</title>
   
 
 
@@ -155,163 +155,47 @@
           <div class="content">
             
 
-  <div class="posts-expand">
-        
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/13/ECS%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Yang Ruihan">
-      <meta itemprop="description" content="杨睿涵的个人博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yrh's Blog">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/13/ECS%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0/" class="post-title-link" itemprop="url">ECS架构概述</a>
+  
+  <div class="post-block">
+    <div class="posts-collapse">
+      <div class="collection-title">
+        <h1 class="collection-header">ECS
+          <small>标签</small>
         </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-03-13 22:01:37 / 修改时间：23:19:29" itemprop="dateCreated datePublished" datetime="2020-03-13T22:01:37+08:00">2020-03-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">游戏开发</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+      </div>
 
       
-          <h1 id="ECS-架构概述"><a href="#ECS-架构概述" class="headerlink" title="ECS 架构概述"></a>ECS 架构概述</h1><p>作者：C.y.</p>
-<p>Github：<a href="https://github.com/yangruihan" target="_blank" rel="noopener">https://github.com/yangruihan</a></p>
-<h2 id="0x00-何为ECS架构"><a href="#0x00-何为ECS架构" class="headerlink" title="0x00 何为ECS架构"></a>0x00 何为ECS架构</h2><p><strong><em>ECS</em></strong>，即 Entity-Component-System（实体-组件-系统） 的缩写，其模式遵循<a href="https://en.wikipedia.org/wiki/Composition_over_inheritance" target="_blank" rel="noopener">组合优于继承</a>原则，游戏内的每一个基本单元都是一个<strong>实体</strong>，每个<strong>实体</strong>又由一个或多个<strong>组件</strong>构成，每个<strong>组件</strong>仅仅包含代表其特性的数据（即在组件中没有任何方法），例如：移动相关的组件<code>MoveComponent</code>包含速度、位置、朝向等属性，一旦一个实体拥有了<code>MoveComponent</code>组件便可以认为它拥有了移动的能力，<strong>系统</strong>便是来处理拥有一个或多个相同<strong>组件</strong>的<strong>实体</strong>集合的工具，其只拥有行为（即在系统中没有任何数据），在这个例子中，处理移动的<strong>系统</strong>仅仅关心拥有移动能力的<strong>实体</strong>，它会遍历所有拥有<code>MoveComponent</code><strong>组件</strong>的<strong>实体</strong>，并根据相关的数据（速度、位置、朝向等），更新实体的位置。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/03/13/ECS%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
+    <div class="collection-year">
+      <h1 class="collection-header">2020</h1>
     </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2020-03-13T22:01:37+08:00"
+              content="2020-03-13">
+          03-13
+        </time>
+      </div>
+
+      <h2 class="post-title">
+          <a class="post-title-link" href="/2020/03/13/ECS%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0/" itemprop="url">
+            <span itemprop="name">ECS架构概述</span>
+          </a>
+      </h2>
+
+    </header>
   </article>
-  
-  
-  
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/13/AStart%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Yang Ruihan">
-      <meta itemprop="description" content="杨睿涵的个人博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yrh's Blog">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/13/AStart%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D/" class="post-title-link" itemprop="url">AStart算法介绍</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-03-13 21:08:27 / 修改时间：23:19:35" itemprop="dateCreated datePublished" datetime="2020-03-13T21:08:27+08:00">2020-03-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">游戏开发</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="A-算法介绍"><a href="#A-算法介绍" class="headerlink" title="A* 算法介绍"></a>A* 算法介绍</h1><p>原文：<a href="https://www.redblobgames.com/pathfinding/a-star/introduction.html" target="_blank" rel="noopener">https://www.redblobgames.com/pathfinding/a-star/introduction.html</a></p>
-<p>在游戏中，我们经常想找从一个位置到另一个位置的路径。我们不仅试图找到其中最短的路径，还希望考虑到时间成本。</p>
-<p><img src="/images/as_1.png" alt=""></p>
-<p>要找到此路径，我们可以使用图搜索算法，该算法在将地图表示为图（Graph）这种数据结构时起作用。<strong>A*</strong> 是其中一个非常流行的选择。<strong>广度优先搜索（BFS）</strong> 是最简单的图搜索算法，因此，我们从它开始介绍，一步步深入到A*算法。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/03/13/AStart%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
+  
+  
+  
 
   
 

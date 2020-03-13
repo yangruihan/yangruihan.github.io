@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script data-ad-client="ca-pub-2112623699045807" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <meta name="description" content="ECS 架构概述作者：C.y. Github：https:&#x2F;&#x2F;github.com&#x2F;yangruihan 0x00 何为ECS架构ECS，即 Entity-Component-System（实体-组件-系统） 的缩写，其模式遵循组合优于继承原则，游戏内的每一个基本单元都是一个实体，每个实体又由一个或多个组件构成，每个组件仅仅包含代表其特性的数据（即在组件中没有任何方法），例如：移动相关的组件Mov">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECS架构概述">
+<meta property="og:url" content="http://yoursite.com/2020/03/13/ECS%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="Yrh&#39;s Blog">
+<meta property="og:description" content="ECS 架构概述作者：C.y. Github：https:&#x2F;&#x2F;github.com&#x2F;yangruihan 0x00 何为ECS架构ECS，即 Entity-Component-System（实体-组件-系统） 的缩写，其模式遵循组合优于继承原则，游戏内的每一个基本单元都是一个实体，每个实体又由一个或多个组件构成，每个组件仅仅包含代表其特性的数据（即在组件中没有任何方法），例如：移动相关的组件Mov">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/03/13/Images/Ecs_arch.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/13/Images/Ecs_001.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/13/Images/Ecs_002.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/13/Images/Ecs_003.png">
+<meta property="og:image" content="http://yoursite.com/2020/03/13/Images/Ecs_004.png">
+<meta property="article:published_time" content="2020-03-13T14:01:37.000Z">
+<meta property="article:modified_time" content="2020-03-13T15:19:29.784Z">
+<meta property="article:author" content="Yang Ruihan">
+<meta property="article:tag" content="游戏开发">
+<meta property="article:tag" content="ECS">
+<meta property="article:tag" content="架构设计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/03/13/Images/Ecs_arch.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/13/ECS%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>ECS架构概述 | Yrh's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yrh's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/yangruihan" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/13/ECS%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Yang Ruihan">
+      <meta itemprop="description" content="杨睿涵的个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yrh's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ECS架构概述
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-13 22:01:37 / 修改时间：23:19:29" itemprop="dateCreated datePublished" datetime="2020-03-13T22:01:37+08:00">2020-03-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">游戏开发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="ECS-架构概述"><a href="#ECS-架构概述" class="headerlink" title="ECS 架构概述"></a>ECS 架构概述</h1><p>作者：C.y.</p>
+<p>Github：<a href="https://github.com/yangruihan" target="_blank" rel="noopener">https://github.com/yangruihan</a></p>
+<h2 id="0x00-何为ECS架构"><a href="#0x00-何为ECS架构" class="headerlink" title="0x00 何为ECS架构"></a>0x00 何为ECS架构</h2><p><strong><em>ECS</em></strong>，即 Entity-Component-System（实体-组件-系统） 的缩写，其模式遵循<a href="https://en.wikipedia.org/wiki/Composition_over_inheritance" target="_blank" rel="noopener">组合优于继承</a>原则，游戏内的每一个基本单元都是一个<strong>实体</strong>，每个<strong>实体</strong>又由一个或多个<strong>组件</strong>构成，每个<strong>组件</strong>仅仅包含代表其特性的数据（即在组件中没有任何方法），例如：移动相关的组件<code>MoveComponent</code>包含速度、位置、朝向等属性，一旦一个实体拥有了<code>MoveComponent</code>组件便可以认为它拥有了移动的能力，<strong>系统</strong>便是来处理拥有一个或多个相同<strong>组件</strong>的<strong>实体</strong>集合的工具，其只拥有行为（即在系统中没有任何数据），在这个例子中，处理移动的<strong>系统</strong>仅仅关心拥有移动能力的<strong>实体</strong>，它会遍历所有拥有<code>MoveComponent</code><strong>组件</strong>的<strong>实体</strong>，并根据相关的数据（速度、位置、朝向等），更新实体的位置。</p>
+<a id="more"></a>
+
+<p><strong>实体</strong>与<strong>组件</strong>是一个一对多的关系，<strong>实体</strong>拥有怎样的能力，完全是取决于其拥有哪些<strong>组件</strong>，通过动态添加或删除<strong>组件</strong>，可以在（游戏）运行时改变<strong>实体</strong>的行为。</p>
+<h2 id="0x01-ECS基本结构"><a href="#0x01-ECS基本结构" class="headerlink" title="0x01 ECS基本结构"></a>0x01 ECS基本结构</h2><p>一个使用ECS架构开发的游戏基本结构如下图所示：</p>
+<p><img src="../Images/Ecs_arch.png" alt=""></p>
+<p>先有一个World，它是<strong>系统</strong>和<strong>实体</strong>的集合，而<strong>实体</strong>就是一个ID，这个ID对应了<strong>组件</strong>的集合。<strong>组件</strong>用来存储游戏状态并且没有任何行为，<strong>系统</strong>拥有处理<strong>实体</strong>的行为但是没有状态。</p>
+<h2 id="0x02-详解ECS中实体、组件与系统"><a href="#0x02-详解ECS中实体、组件与系统" class="headerlink" title="0x02 详解ECS中实体、组件与系统"></a>0x02 详解ECS中实体、组件与系统</h2><h3 id="1-实体"><a href="#1-实体" class="headerlink" title="1. 实体"></a>1. 实体</h3><p>实体只是一个概念上的定义，指的是存在你游戏世界中的一个独特物体，是一系列组件的集合。为了方便区分不同的实体，在代码层面上一般用一个ID来进行表示。所有组成这个实体的组件将会被这个ID标记，从而明确哪些组件属于该实体。由于其是一系列组件的集合，因此完全可以在运行时动态地为实体增加一个新的组件或是将组件从实体中移除。比如，玩家实体因为某些原因（可能陷入昏迷）而丧失了移动能力，只需简单地将移动组件从该实体身上移除，便可以达到无法移动的效果了。</p>
+<p><strong>样例</strong>：</p>
+<ul>
+<li>Player(Position, Sprite, Velocity, Health)</li>
+<li>Enemy(Position, Sprite, Velocity, Health, AI)</li>
+<li>Tree(Position, Sprite)</li>
+</ul>
+<p><em>注：括号前为实体名，括号内为该实体拥有的组件</em></p>
+<h3 id="2-组件"><a href="#2-组件" class="headerlink" title="2. 组件"></a>2. 组件</h3><p>一个组件是一堆数据的集合，可以使用C语言中的结构体来进行实现。它没有方法，即不存在任何的行为，只用来存储状态。一个经典的实现是：每一个组件都继承（或实现）同一个基类（或接口），通过这样的方法，我们能够非常方便地在运行时动态添加、识别、移除组件。每一个组件的意义在于描述实体的某一个特性。例如，<code>PositionComponent</code>（位置组件），其拥有<code>x</code>、<code>y</code>两个数据，用来描述实体的位置信息，拥有<code>PositionComponent</code>的实体便可以说在游戏世界中拥有了一席之地。当组件们单独存在的时候，实际上是没有什么意义的，但是当多个组件通过系统的方式组织在一起，才能发挥出真正的力量。同时，我们还可以用空组件（不含任何数据的组件）对实体进行标记，从而在运行时动态地识别它。如，<code>EnemyComponent</code>这个组件可以不含有任何数据，拥有该组件的实体被标记为“敌人”。</p>
+<p>根据实际开发需求，这里还会存在一种特殊的组件，名为 <strong>Singleton Component （单例组件）</strong>，顾名思义，单例组件在一个上下文中有且只有一个。具体在什么情况下使用下文系统一节中会提到。 </p>
+<p><strong>样例</strong>：</p>
+<ul>
+<li>PositionComponent(x, y)</li>
+<li>VelocityComponent(X, y)</li>
+<li>HealthComponent(value)</li>
+<li>PlayerComponent()</li>
+<li>EnemyComponent()</li>
+</ul>
+<p><em>注：括号前为组件名，括号内为该组件拥有的数据</em></p>
+<h3 id="3-系统"><a href="#3-系统" class="headerlink" title="3. 系统"></a>3. 系统</h3><p>理解了实体和组件便会发现，至此还未曾提到过游戏逻辑相关的话题。系统便是ECS架构中用来处理游戏逻辑的部分。何为系统，一个系统就是对拥有一个或多个相同组件的实体集合进行操作的工具，它只有行为，没有状态，即不应该存放任何数据。举个例子，游戏中玩家要操作对应的角色进行移动，由上面两部分可知，角色是一个实体，其拥有位置和速度组件，那么怎么根据实体拥有的速度去刷新其位置呢，<code>MoveSystem</code>（移动系统）登场，它可以得到所有拥有位置和速度组件的实体集合，遍历这个集合，根据每一个实体拥有的速度值和物理引擎去计算该实体应该所处的位置，并刷新该实体位置组件的值，至此，完成了玩家操控的角色移动了。</p>
+<p>注意，我强调了移动系统可以得到<strong>所有</strong>拥有位置和速度组件的实体集合，因为一个实体同时拥有位置和速度组件，我们便认为该实体拥有移动的能力，因此移动系统可以去刷新每一个符合要求的实体的位置。这样做的好处在于，当我们玩家操控的角色因为某种原因不能移动时，我们只需要将速度组件从该实体中移除，移动系统就得不到角色的引用了，同样的，如果我们希望游戏场景中的某一个物件动起来，只需要为其添加一个速度组件就万事大吉。</p>
+<p>一个系统关心实体拥有哪些组件是由我们决定的，通过一些手段，我们可以在系统中很快地得到对应实体集合。</p>
+<p>上文提到的  <strong>Singleton Component （单例组件）</strong> ，明白了系统的概念更容易说明，还是玩家操作角色的例子，该实体速度组件的值从何而来，一般情况下是根据玩家的操作输入去赋予对应的数值。这里就设计到一个新组件<code>InputComponent</code>（输入组件）和一个新系统<code>ChangePlayerVelocitySystem</code>（改变玩家速度系统），改变玩家速度系统会根据输入组件的值去改变玩家速度，假设还有一个系统<code>FireSystem</code>（开火系统），它会根据玩家是否输入开火键进行开火操作，那么就有 2 个系统同时依赖输入组件，真实游戏情况可能比这还要复杂，有无数个系统都要依赖于输入组件，同时拥有输入组件的实体在游戏中仅仅需要有一个，每帧去刷新它的值就可以了，这时很容易让人想到单例模式（便捷地访问、只有一个引用），同样的，单例组件也是指整个游戏世界中有且只有一个实体拥有该组件，并且希望各系统能够便捷的访问到它，经过一些处理，在任何系统中都能通过类似<code>world-&gt;GetSingletonInput()</code>的方法来获得该组件引用。</p>
+<p>系统这里比较麻烦，还存在一个常见问题：由于代码逻辑分布于各个系统中，各个系统之间为了解耦又不能互相访问，那么如果有多个系统希望运行同样的逻辑，该如何解决，总不能把代码复制 N 份，放到各个系统之中。<strong>UtilityFunction</strong>（实用函数） 便是用来解决这一问题的，它将被多个系统调用的方法单独提取出来，放到统一的地方，各个系统通过 <strong>UtilityFunction</strong> 调用想执行的方法，同系统一样， <strong>UtilityFunction</strong> 中不能存放状态，它应该是拥有各个方法的纯净集合。</p>
+<p><strong>样例</strong>：</p>
+<ul>
+<li>MoveSystem(Position, Velocity)</li>
+<li>RenderSystem(Position, Sprite)</li>
+</ul>
+<p><em>注：括号前为系统名，括号内为该系统关心的组件集合</em></p>
+<h2 id="0x03-ECS架构实战"><a href="#0x03-ECS架构实战" class="headerlink" title="0x03 ECS架构实战"></a>0x03 ECS架构实战</h2><p>接下来终于到了实战环节，这里笔者使用 Unity3d 游戏引擎（5.6.3p4），配合现成的 <a href="https://github.com/sschmid/Entitas-CSharp" target="_blank" rel="noopener">Entitas</a> 框架来实现一个小 Demo。由于 Unity3d 游戏引擎已经为我们提供了输入类和物理引擎，因此 Demo 中有部分内容可能与上文不太一致，主要以展示整体架构为主，请读者忽略这些细节。</p>
+<h3 id="1-Entitas介绍"><a href="#1-Entitas介绍" class="headerlink" title="1. Entitas介绍"></a>1. Entitas介绍</h3><blockquote>
+<p>Entitas is a super fast Entity Component System Framework (ECS) specifically made for C# and Unity. Internal caching and blazing fast component access makes it second to none. Several design decisions have been made to work optimal in a garbage collected environment and to go easy on the garbage collector. Entitas comes with an optional code generator which radically reduces the amount of code you have to write and <a href="https://cleancoders.com/" target="_blank" rel="noopener">makes your code read like well written prose.</a></p>
+</blockquote>
+<p>以上是 Entitas 官方介绍，简单来说该框架提供了代码生成器，只需要按照它的规范实现组件和系统，便可以一键生成我们需要的属性和方法，同时为了方便我们在系统中获得感兴趣的组件，它还提供了强大的分组、匹配功能。多说无益，直接开始实战吧。</p>
+<h3 id="2-实战"><a href="#2-实战" class="headerlink" title="2. 实战"></a>2. 实战</h3><p>下载<a href="https://store.unity.com/cn" target="_blank" rel="noopener">Unity3d游戏引擎</a>的步骤这里就省略了，我们先从 <a href="https://github.com/sschmid/Entitas-CSharp/releases" target="_blank" rel="noopener">Github</a> 上下载 Entitas，笔者这里使用的是 <a href="https://github.com/sschmid/Entitas-CSharp/releases/tag/0.42.4" target="_blank" rel="noopener">Entitas 0.42.4</a> 。下载好解压后，将其 CodeGenerator 和 Entitas 目录导入到一个新的 Unity 工程（这里一切从简，创建了一个空的 2D 项目），如下图所示。</p>
+<p><img src="../Images/Ecs_001.png" alt="Ecs_001"></p>
+<p>接着，在工具栏找到 Tools -&gt; Entitas -&gt;Preference 对 Entitas 进行配置，由于这只是一个演示 ECS架构的小 Demo，就不对各种配置项进行解释了，对这些感兴趣的同学可以去官网查看文档，配置如下：</p>
+<p><img src="../Images/Ecs_002.png" alt="Ecs_002"></p>
+<p>点击绿色按钮 Generate，如果没有任何报错，则配置没有问题。接下来就可以开始写代码了。</p>
+<p>我们 Demo 的目标是控制一个矩形进行上下左右移动。由上文可知，我们至少需要 2 个组件：<code>PositionComponent</code>和<code>VelocityComponent</code>。在 Scripts/Components 目录下分别新建这两个脚本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; PositionComponent.cs</span><br><span class="line">using Entitas;</span><br><span class="line">using UnityEngine;</span><br><span class="line"></span><br><span class="line">public class PositionComponent : IComponent</span><br><span class="line">&#123;</span><br><span class="line">    public Vector2 Value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; VelocityComponent.cs</span><br><span class="line">using Entitas;</span><br><span class="line">using UnityEngine;</span><br><span class="line"></span><br><span class="line">public class VelocityComponent : IComponent &#123;</span><br><span class="line">    public Vector2 Value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于在我们 Demo 中，玩家只能操控一个矩形，我们需要对其进行标记，告诉系统这个实体是玩家的代表，于是我们还要加上一个<code>PlayerComponent</code>来进行标记。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; PlayerComponent.cs</span><br><span class="line">using Entitas;</span><br><span class="line"></span><br><span class="line">public class PlayerComponent : IComponent &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>它不需要任何数据，仅仅用自身就可以实现标记的效果，拥有该组件的实体便是我们玩家控制的代表了。</p>
+<p>实现完这 3 个组件后，我们需要利用 Entitas 框架提供的代码生成器，生成一下相应的代码，Tools -&gt; Entitas -&gt; Generate 或者快捷键<code>control + shift + g</code>。</p>
+<p><img src="../Images/Ecs_003.png" alt="Ecs_003"></p>
+<p>没有看到任何报错，很好我们继续。</p>
+<p>接着我们要实现<code>ChangePlayerVelocitySystem</code>，它每一帧都会运行，根据玩家是否输入<code>w</code>、<code>a</code>、<code>s</code>、<code>d</code>来改变矩形的速度。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; ChangePlayerVelocitySystem.cs</span><br><span class="line">using Entitas;</span><br><span class="line">using UnityEngine;</span><br><span class="line"></span><br><span class="line">public class ChangePlayerVelocitySystem : IExecuteSystem</span><br><span class="line">&#123;</span><br><span class="line">    &#x2F;&#x2F; 每一帧都会执行</span><br><span class="line">    public void Execute()</span><br><span class="line">    &#123;</span><br><span class="line">        &#x2F;&#x2F; 得到拥有 Player、Position、Velocity 组件的实体集合</span><br><span class="line">        var playerCollection &#x3D; Contexts.sharedInstance.game.GetGroup(</span><br><span class="line">            GameMatcher.AllOf(</span><br><span class="line">                GameMatcher.Player,</span><br><span class="line">                GameMatcher.Position,</span><br><span class="line">                GameMatcher.Velocity));</span><br><span class="line"></span><br><span class="line">        var velocity &#x3D; Vector2.zero;</span><br><span class="line">        if (Input.GetKey(KeyCode.W))</span><br><span class="line">        &#123;</span><br><span class="line">            velocity.y +&#x3D; 1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (Input.GetKey(KeyCode.S))</span><br><span class="line">        &#123;</span><br><span class="line">            velocity.y -&#x3D; 1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (Input.GetKey(KeyCode.A))</span><br><span class="line">        &#123;</span><br><span class="line">            velocity.x -&#x3D; 1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (Input.GetKey(KeyCode.D))</span><br><span class="line">        &#123;</span><br><span class="line">            velocity.x +&#x3D; 1;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        foreach (var player in playerCollection)</span><br><span class="line">        &#123;</span><br><span class="line">            player.ReplaceVelocity(velocity);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里实现了<code>IExecuteSystem</code>接口，每一帧其<code>Execute</code>方法都会执行。</p>
+<p>至此，我们每一帧都会根据用户的输入去改变矩形的速度，还需要一个<code>ChangePositionSystem</code>，它会根据实体身上速度组件的值，去改变位置组件的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; ChangePositionSystem.cs</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using Entitas;</span><br><span class="line">using UnityEngine;</span><br><span class="line"></span><br><span class="line">public class ChangePositionSystem : ReactiveSystem&lt;GameEntity&gt;</span><br><span class="line">&#123;</span><br><span class="line">    public ChangePositionSystem(Contexts contexts) : base(contexts.game)</span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected override ICollector&lt;GameEntity&gt; GetTrigger(IContext&lt;GameEntity&gt; context)</span><br><span class="line">    &#123;</span><br><span class="line">        return context.CreateCollector(GameMatcher.AllOf(GameMatcher.Position, GameMatcher.Velocity));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected override bool Filter(GameEntity entity)</span><br><span class="line">    &#123;</span><br><span class="line">        return entity.hasPosition &amp;&amp; entity.hasVelocity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected override void Execute(List&lt;GameEntity&gt; entities)</span><br><span class="line">    &#123;</span><br><span class="line">        foreach (var entity in entities)</span><br><span class="line">        &#123;</span><br><span class="line">            var velocity &#x3D; entity.velocity.Value;</span><br><span class="line">            var newPosition &#x3D; entity.position.Value + velocity * Time.deltaTime;</span><br><span class="line"></span><br><span class="line">            entity.ReplacePosition(newPosition);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们用到了<code>ReactiveSystem&lt;GameEntity&gt;</code>基类，稍微讲解一下，它应该算是一种特殊的<code>IExecuteSystem</code>接口实现，它也会每一帧都执行，但它会帮助我们监听我们感兴趣的组件，只有当这些组件发生变化时，它的<code>Execute</code>方法才会被调用，<code>GetTrigger</code>和<code>Filter</code>两个方法相当于过滤器，具体就不细讲了，可以去官网查看一下文档。</p>
+<p>由于使用了 Unity3d 游戏引擎，我们的框架需要由引擎来驱动，因此我们还要添加一个继承自<code>MonoBehaviour</code>的<code>GameController</code>脚本，在其中的<code>Start</code>方法里实例化各个系统，<code>Update</code>方法里调用<code>Excute</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; GameController.cs</span><br><span class="line">using UnityEngine;</span><br><span class="line">using Entitas;</span><br><span class="line"></span><br><span class="line">public class GameController : MonoBehaviour</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    private Systems _systems;</span><br><span class="line"></span><br><span class="line">    private void Start()</span><br><span class="line">    &#123;</span><br><span class="line">        Contexts contexts &#x3D; Contexts.sharedInstance;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 创建系统</span><br><span class="line">        _systems &#x3D; CreateSystems(contexts);</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 创建我们的玩家实体</span><br><span class="line">        var player &#x3D; contexts.game.CreateEntity();</span><br><span class="line">        &#x2F;&#x2F; 为其添加相应的组件</span><br><span class="line">        player.isPlayer &#x3D; true;</span><br><span class="line">        player.AddPosition(Vector2.zero);</span><br><span class="line">        player.AddVelocity(Vector2.zero);</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 初始化系统</span><br><span class="line">        _systems.Initialize();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void Update()</span><br><span class="line">    &#123;</span><br><span class="line">        _systems.Execute();</span><br><span class="line">        _systems.Cleanup();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void OnDestroy()</span><br><span class="line">    &#123;</span><br><span class="line">        _systems.TearDown();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Systems CreateSystems(Contexts contexts)</span><br><span class="line">    &#123;</span><br><span class="line">        &#x2F;&#x2F; Feature 是 Entitas 框架提供的在 Editor 下进行调试的类</span><br><span class="line">        return new Feature(&quot;Game&quot;)</span><br><span class="line">            .Add(new ChangePlayerVelocitySystem())</span><br><span class="line">            .Add(new ChangePositionSystem(contexts));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在场景中新建一个名为“GameController”的空物体，将该脚本添加上去，运行游戏，在“Hierarchy”页签下就可以看到我们创建的系统和实体了，如下图：</p>
+<p><img src="../Images/Ecs_004.png" alt="Ecs_004"></p>
+<p>当我们按下<code>w</code>、<code>a</code>、<code>s</code>、<code>d</code>时，可以看到左侧 Position 下面的数值和 Velocity 下面的数值都根据我们的输入产生了对应的变化，这说明功能实现的没有问题。</p>
+<p>至此，虽然还没有图形显示在场景中，但一个可操控的 Demo 已经完成了。</p>
+<p>为了节省篇幅，<code>SpriteComponent</code>（精灵组件）和<code>RenderSystem</code>（渲染系统），这里就不再展示了，完整项目可以在我的 <a href="https://github.com/yangruihan/ECSDemo" target="_blank" rel="noopener">Github</a> 里查看。</p>
+<h2 id="0x04-后记"><a href="#0x04-后记" class="headerlink" title="0x04 后记"></a>0x04 后记</h2><p>到此，整篇文章也进入了尾声，不知读者是否对 ECS 架构有了自己的理解，其实笔者也是最近这段时间才开始使用该架构编写一些小项目，还未在商业项目中使用过，因此有些地方的理解可能存在一定的偏差，欢迎大家讨论与指正，感谢大家的阅读。</p>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><ul>
+<li><a href="http://gad.qq.com/article/detail/28682" target="_blank" rel="noopener">《守望先锋》架构设计与网络同步 – GDC2017 精品分享实录</a>（文章）</li>
+<li><a href="http://gad.qq.com/article/detail/29595" target="_blank" rel="noopener">《守望先锋》回放技术-阵亡镜头、全场最佳和亮眼表现</a>（文章）</li>
+<li><a href="https://blog.codingnow.com/2017/06/overwatch_ecs.html" target="_blank" rel="noopener">浅谈《守望先锋》中的 ECS 构架</a>（文章）</li>
+<li><a href="https://www.youtube.com/watch?v=1wvMXur19M4" target="_blank" rel="noopener">Entity system architecture with Unity</a>（视频）</li>
+<li><a href="https://www.youtube.com/watch?v=lNTaC-JWmdI" target="_blank" rel="noopener">ECS architecture with Unity by example</a>（视频）</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>坚持原创、翻译 技术文章|心得体会|日常笔记，您的支持将鼓励我继续创作！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpeg" alt="Yang Ruihan 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpeg" alt="Yang Ruihan 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/" rel="tag"># 游戏开发</a>
+              <a href="/tags/ECS/" rel="tag"># ECS</a>
+              <a href="/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" rel="tag"># 架构设计</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/13/AStart%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D/" rel="prev" title="AStart算法介绍">
+      <i class="fa fa-chevron-left"></i> AStart算法介绍
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ECS-架构概述"><span class="nav-number">1.</span> <span class="nav-text">ECS 架构概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00-何为ECS架构"><span class="nav-number">1.1.</span> <span class="nav-text">0x00 何为ECS架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01-ECS基本结构"><span class="nav-number">1.2.</span> <span class="nav-text">0x01 ECS基本结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02-详解ECS中实体、组件与系统"><span class="nav-number">1.3.</span> <span class="nav-text">0x02 详解ECS中实体、组件与系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-实体"><span class="nav-number">1.3.1.</span> <span class="nav-text">1. 实体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-组件"><span class="nav-number">1.3.2.</span> <span class="nav-text">2. 组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-系统"><span class="nav-number">1.3.3.</span> <span class="nav-text">3. 系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03-ECS架构实战"><span class="nav-number">1.4.</span> <span class="nav-text">0x03 ECS架构实战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Entitas介绍"><span class="nav-number">1.4.1.</span> <span class="nav-text">1. Entitas介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-实战"><span class="nav-number">1.4.2.</span> <span class="nav-text">2. 实战</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04-后记"><span class="nav-number">1.5.</span> <span class="nav-text">0x04 后记</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考"><span class="nav-number">1.5.0.1.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Yang Ruihan</p>
+  <div class="site-description" itemprop="description">杨睿涵的个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yangruihan" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yangruihan" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:coderyrh9236@gmail.com" title="E-Mail → mailto:coderyrh9236@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/chilam9236" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;chilam9236" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.instagram.com/yangruihan36" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;yangruihan36" rel="noopener" target="_blank"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yang Ruihan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
