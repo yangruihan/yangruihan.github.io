@@ -21,12 +21,12 @@
   </script>
 
 <script data-ad-client="ca-pub-2112623699045807" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  <meta name="description" content="A* 算法介绍原文：https:&#x2F;&#x2F;www.redblobgames.com&#x2F;pathfinding&#x2F;a-star&#x2F;introduction.html 在游戏中，我们经常想找从一个位置到另一个位置的路径。我们不仅试图找到其中最短的路径，还希望考虑到时间成本。  要找到此路径，我们可以使用图搜索算法，该算法在将地图表示为图（Graph）这种数据结构时起作用。A* 是其中一个非常流行的选择。广度优先搜">
+  <meta name="description" content="A* 算法介绍已联系原作者，取得翻译授权 原文：https:&#x2F;&#x2F;www.redblobgames.com&#x2F;pathfinding&#x2F;a-star&#x2F;introduction.html 在游戏中，我们经常想找从一个位置到另一个位置的路径。我们不仅试图找到其中最短的路径，还希望考虑到时间成本。  要找到此路径，我们可以使用图搜索算法，该算法在将地图表示为图（Graph）这种数据结构时起作用。A* 是其中一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AStart算法介绍">
 <meta property="og:url" content="http://yoursite.com/2020/03/13/AStart%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D/index.html">
 <meta property="og:site_name" content="Rayan&#39;s Blog">
-<meta property="og:description" content="A* 算法介绍原文：https:&#x2F;&#x2F;www.redblobgames.com&#x2F;pathfinding&#x2F;a-star&#x2F;introduction.html 在游戏中，我们经常想找从一个位置到另一个位置的路径。我们不仅试图找到其中最短的路径，还希望考虑到时间成本。  要找到此路径，我们可以使用图搜索算法，该算法在将地图表示为图（Graph）这种数据结构时起作用。A* 是其中一个非常流行的选择。广度优先搜">
+<meta property="og:description" content="A* 算法介绍已联系原作者，取得翻译授权 原文：https:&#x2F;&#x2F;www.redblobgames.com&#x2F;pathfinding&#x2F;a-star&#x2F;introduction.html 在游戏中，我们经常想找从一个位置到另一个位置的路径。我们不仅试图找到其中最短的路径，还希望考虑到时间成本。  要找到此路径，我们可以使用图搜索算法，该算法在将地图表示为图（Graph）这种数据结构时起作用。A* 是其中一">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/images/as_1.png">
 <meta property="og:image" content="http://yoursite.com/images/as_2.png">
@@ -61,10 +61,11 @@
 <meta property="og:image" content="http://yoursite.com/images/as_12.png">
 <meta property="og:image" content="http://yoursite.com/images/as_13.png">
 <meta property="article:published_time" content="2020-03-13T13:08:27.000Z">
-<meta property="article:modified_time" content="2020-03-13T15:19:35.739Z">
+<meta property="article:modified_time" content="2020-03-15T13:04:50.785Z">
 <meta property="article:author" content="Yang Ruihan">
 <meta property="article:tag" content="游戏开发">
 <meta property="article:tag" content="算法">
+<meta property="article:tag" content="AStar">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/images/as_1.png">
 
@@ -219,10 +220,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-03-13 21:08:27 / 修改时间：23:19:35" itemprop="dateCreated datePublished" datetime="2020-03-13T21:08:27+08:00">2020-03-13</time>
+              <time title="创建时间：2020-03-13 21:08:27" itemprop="dateCreated datePublished" datetime="2020-03-13T21:08:27+08:00">2020-03-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-15 21:04:50" itemprop="dateModified" datetime="2020-03-15T21:04:50+08:00">2020-03-15</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -244,7 +251,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="A-算法介绍"><a href="#A-算法介绍" class="headerlink" title="A* 算法介绍"></a>A* 算法介绍</h1><p>原文：<a href="https://www.redblobgames.com/pathfinding/a-star/introduction.html" target="_blank" rel="noopener">https://www.redblobgames.com/pathfinding/a-star/introduction.html</a></p>
+        <h1 id="A-算法介绍"><a href="#A-算法介绍" class="headerlink" title="A* 算法介绍"></a>A* 算法介绍</h1><p>已联系原作者，取得翻译授权</p>
+<p>原文：<a href="https://www.redblobgames.com/pathfinding/a-star/introduction.html" target="_blank" rel="noopener">https://www.redblobgames.com/pathfinding/a-star/introduction.html</a></p>
 <p>在游戏中，我们经常想找从一个位置到另一个位置的路径。我们不仅试图找到其中最短的路径，还希望考虑到时间成本。</p>
 <p><img src="/images/as_1.png" alt=""></p>
 <p>要找到此路径，我们可以使用图搜索算法，该算法在将地图表示为图（Graph）这种数据结构时起作用。<strong>A*</strong> 是其中一个非常流行的选择。<strong>广度优先搜索（BFS）</strong> 是最简单的图搜索算法，因此，我们从它开始介绍，一步步深入到A*算法。</p>
@@ -408,6 +416,7 @@
           <div class="post-tags">
               <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/" rel="tag"># 游戏开发</a>
               <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/AStar/" rel="tag"># AStar</a>
           </div>
 
         
@@ -493,7 +502,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -506,7 +515,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
