@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script data-ad-client="ca-pub-2112623699045807" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <meta name="description" content="【开发日志】游戏 Demo 开发日志 1（暂未定游戏名称）Hello，大家好，这里是 Rayan。今天为大家介绍一下最近业余时间开发的一款游戏 Demo。 首先为大家介绍一下开发背景及其相关信息。 我本人非常喜欢 Roguelike 类游戏，玩过大量该类型游戏，尤其喜欢《以撒的结合》、《杀戮尖塔》、《死亡细胞》、《传说法师》等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="游戏开发日志1">
+<meta property="og:url" content="http://yoursite.com/2020/03/29/%E5%BC%80%E5%8F%91%E6%97%A5%E5%BF%971/index.html">
+<meta property="og:site_name" content="Rayan&#39;s Blog">
+<meta property="og:description" content="【开发日志】游戏 Demo 开发日志 1（暂未定游戏名称）Hello，大家好，这里是 Rayan。今天为大家介绍一下最近业余时间开发的一款游戏 Demo。 首先为大家介绍一下开发背景及其相关信息。 我本人非常喜欢 Roguelike 类游戏，玩过大量该类型游戏，尤其喜欢《以撒的结合》、《杀戮尖塔》、《死亡细胞》、《传说法师》等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/images/DevLog/1-1.png">
+<meta property="og:image" content="http://yoursite.com/images/DevLog/1-2.gif">
+<meta property="og:image" content="http://yoursite.com/images/DevLog/1-3.gif">
+<meta property="og:image" content="http://yoursite.com/images/DevLog/1-4.gif">
+<meta property="og:image" content="http://yoursite.com/images/DevLog/1-5.gif">
+<meta property="og:image" content="http://yoursite.com/images/DevLog/1-6.gif">
+<meta property="og:image" content="http://yoursite.com/images/DevLog/1-7.gif">
+<meta property="og:image" content="http://yoursite.com/images/DevLog/1-8.gif">
+<meta property="og:image" content="http://yoursite.com/images/DevLog/1-9.png">
+<meta property="og:image" content="http://yoursite.com/images/DevLog/1-10.gif">
+<meta property="og:image" content="http://yoursite.com/images/DevLog/1-11.gif">
+<meta property="article:published_time" content="2020-03-29T01:44:30.000Z">
+<meta property="article:modified_time" content="2020-03-29T01:46:57.925Z">
+<meta property="article:author" content="Rayan">
+<meta property="article:tag" content="游戏开发日志">
+<meta property="article:tag" content="Unity3D">
+<meta property="article:tag" content="游戏设计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/DevLog/1-1.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/29/%E5%BC%80%E5%8F%91%E6%97%A5%E5%BF%971/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>游戏开发日志1 | Rayan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Rayan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/yangruihan" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/29/%E5%BC%80%E5%8F%91%E6%97%A5%E5%BF%971/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Rayan">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rayan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          游戏开发日志1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-29 09:44:30 / 修改时间：09:46:57" itemprop="dateCreated datePublished" datetime="2020-03-29T09:44:30+08:00">2020-03-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91%E6%97%A5%E5%BF%97/" itemprop="url" rel="index"><span itemprop="name">游戏开发日志</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="【开发日志】游戏-Demo-开发日志-1（暂未定游戏名称）"><a href="#【开发日志】游戏-Demo-开发日志-1（暂未定游戏名称）" class="headerlink" title="【开发日志】游戏 Demo 开发日志 1（暂未定游戏名称）"></a>【开发日志】游戏 Demo 开发日志 1（暂未定游戏名称）</h1><p>Hello，大家好，这里是 Rayan。今天为大家介绍一下最近业余时间开发的一款游戏 Demo。</p>
+<p>首先为大家介绍一下开发背景及其相关信息。</p>
+<p>我本人非常喜欢 Roguelike 类游戏，玩过大量该类型游戏，尤其喜欢《以撒的结合》、《杀戮尖塔》、《死亡细胞》、《传说法师》等。</p>
+<a id="more"></a>
+
+<p><em>这里补充一下 Roguelike 的定义：</em></p>
+<blockquote>
+<p>Roguelike是角色扮演游戏的一个分支类型，它以<strong>一系列随机生成关卡的地牢</strong>、<strong>回合制战斗</strong>、<strong>基于磁贴的图像（tile-based graphics）</strong>和<strong>角色永久死亡（即一次游戏内无法无限制复活）</strong>为特点。大多数Roguelike游戏创建在高度幻想的故事背景上，这一点是由于桌面角色扮演游戏（如《龙与地下城》）的影响。</p>
+<p>— 摘自<a href="https://zh.wikipedia.org/wiki/Roguelike" target="_blank" rel="noopener">《维基百科》</a></p>
+</blockquote>
+<p>因此，我也一直想开发一款 Roguelike 类游戏。</p>
+<p>在介绍我的游戏之前，首先来看一看《以撒的结合》，它最大的特色是拥有<strong>庞大数量</strong>、<strong>各式各样</strong>的道具，再加上<strong>随机生成的地图</strong>，使得每次开始都是完全不一样的体验，这种机制大大提高了游戏的可重复游玩性，至今我仍会在空闲时间玩上一局。不过由于它是即时的，对操作要求还是挺高的，上手有一定的门槛。</p>
+<p>再看一看《杀戮尖塔》，它最大的特色是——它是基于卡牌的 Roguelike 游戏，因此它拥有卡牌游戏的优势：<strong>丰富的牌库</strong>以及<strong>卡牌构筑（Build）系统</strong>，<strong>回合制</strong>降低玩家操作门槛，并留给玩家思考时间。如何管理随机得到的卡牌，使其构筑出强力的流派是它的核心体验之一。不过也正是因为它是<strong>回合制</strong>游戏，使其少了一些操作感。</p>
+<p>于是，我给自己这款游戏定了几个特点：</p>
+<ol>
+<li>2D：毕竟只有一个人开发，怎么简单怎么来</li>
+<li>俯视角：更容易展示游戏信息</li>
+<li>即时战斗：具有一定的操作性，但难度不会像《以撒的结合》</li>
+<li>丰富的道具：提升游戏的随机性和重复游戏性，但游戏内包装不一定叫道具</li>
+<li>随机生成的地图：同上提升游戏的随机性和重复游戏性</li>
+<li>具有一定的构筑（Build）机制：玩家要利用得到的道具排列组合成各种套路或流派</li>
+</ol>
+<p>特点有了，接下来就要考虑通过怎么样的玩法机制和包装来实现这些特点了。</p>
+<p>学习 Game Jam，为了避免陷入无穷的脑洞而迷失方向，导致最后什么都做不出来的窘境，我给自己定了一个主题：<strong>三个基本形状——圆、三角和矩形</strong>。</p>
+<p>为什么会定这样一个主题呢，答案就是<strong>一切从简</strong>，毕竟是一个人开发，一定要控制成本，怎么简单怎么来，快速开发出原型来验证核心玩法。</p>
+<p>接下来就是围绕这三个基本形状来做文章了。</p>
+<p>三个不同的形状给人不同的感觉：三角形给人一种攻击的感觉，矩形给人一种辅助防御的感觉，圆形给人一种能量核心的感觉。</p>
+<p>既然要具备构筑的要素，那么一定得有基本单元，比如杀戮尖塔中的卡牌。这里我将每一种形状称为一个<strong>单元（Unit）</strong>，其中：</p>
+<ul>
+<li>三角形为<strong>攻击单元（Attack Unit）</strong>，一切与攻击相关的能力都由它来承载，比如发射子弹等</li>
+<li>矩形为<strong>辅助单元（Assist Unit）</strong>，一切辅助的能力都由它来承载，比如瞄准、提升能力等</li>
+<li>圆形为<strong>能量单元（Energy Unit）</strong>，一切以能量为核心的能力都由它来承载，比如移动、闪避、护盾等</li>
+</ul>
+<p>有了上面这些设计，游戏玩法也基本成型：随机生成地图-&gt;玩家探索地图-&gt;击败敌人-&gt;随机获得单元-&gt;按照理解装配单元、升级单元-&gt;击败更强的敌人，验证自己的构筑思路</p>
+<p>上面介绍了玩法设计层面上的思路，接下来就来介绍具体开发层面的思路了。</p>
+<p>首先必然是选择开发工具了：</p>
+<ul>
+<li>游戏引擎：Unity 2019.3，为何使用 Unity，原因很简单，我对 Unity 最熟悉，使用起来也最顺手，为何选择最新版本，而不是稳定版，通过这个小 Demo 也想尽可能了解和使用 Unity 最新的特性</li>
+<li>IDE：Rider，谁用谁知道，有自己 Github 公开项目的同学可以申请免费使用</li>
+<li>版本控制工具：Git &amp; Github，版本控制工具一定要有，避免出现代码丢失、修改了逻辑但是又想改回去等情况，可以创建私人仓库后的 Github 还是很方便的</li>
+<li>任务管理：使用 Github Projects 的 Kanban 模板来进行 TODO 管理</li>
+</ul>
+<p>编辑器一览：</p>
+<p><img src="/images/DevLog/1-1.png" alt=""></p>
+<p>具体代码框架这里就不提了，不然篇幅会很长，如果大家有兴趣的话，后面可以再写篇文章专门介绍一下。</p>
+<p>目前实现的功能有：</p>
+<ul>
+<li><p>将目前需要用到的 Unity Package 导入工程：</p>
+<ul>
+<li>Post Processing（后处理）：用来调整项目后处理效果</li>
+<li>Cinemachine 导入：用来管理摄像机，实现跟踪角色等功能</li>
+<li>Burst &amp; Job System：将一些性能敏感的代码使用 Burst + Job System 编写，可以有效提高性能（目前，角色移动是这么实现的，但效果并不明显）</li>
+<li>LRP：目前选择的是 Lightweight Renderer Pipeline（轻量级渲染管线），由于目前处于 Demo 阶段、开发人力成本有限，且想登录手机平台，而且设想中画面也比较简单，玩法制胜，因此 LRP 足以</li>
+</ul>
+</li>
+<li><p>游戏基本框架搭建（略过）</p>
+</li>
+<li><p>单元框架及一些基本单元功能实现<br>  玩家所有的能力以及敌人所有的能力都是通过单元来实现的</p>
+<ul>
+<li><p>攻击单元（三角形）</p>
+<ul>
+<li><p>普通攻击单元</p>
+<p>  <img src="/images/DevLog/1-2.gif" alt=""></p>
+</li>
+<li><p>加强版普通攻击单元</p>
+<p>  <img src="/images/DevLog/1-3.gif" alt=""></p>
+<p>  <img src="/images/DevLog/1-4.gif" alt=""></p>
+</li>
+</ul>
+</li>
+<li><p>辅助单元（矩形）</p>
+<ul>
+<li><p>随鼠标瞄准辅助单元</p>
+<p>  <img src="/images/DevLog/1-5.gif" alt=""></p>
+</li>
+<li><p>自动瞄准单元</p>
+<p>  <img src="/images/DevLog/1-6.gif" alt=""></p>
+</li>
+</ul>
+</li>
+<li><p>能量单元（圆形）</p>
+<ul>
+<li><p>基础移动单元</p>
+<p>  <img src="/images/DevLog/1-7.gif" alt=""></p>
+</li>
+<li><p>闪避单元</p>
+<p>  <img src="/images/DevLog/1-8.gif" alt=""></p>
+</li>
+</ul>
+</li>
+<li><p>组合单元（三种形状组合）</p>
+<p>  将上述两个或多个单元组合成一个单元，具有它们所有的能力</p>
+<p>  比如图中蓝色框出来的部分：</p>
+<p>  <img src="/images/DevLog/1-9.png" alt=""></p>
+<p>  它是移动单元和鼠标瞄准单元的组合</p>
+</li>
+</ul>
+</li>
+<li><p>装备单元、更换单元基本UI界面</p>
+<p>  <img src="/images/DevLog/1-10.gif" alt=""></p>
+</li>
+<li><p>通过现有单元组合出了基本的敌人逻辑</p>
+<p>  <img src="/images/DevLog/1-11.gif" alt=""></p>
+<p>  可以看到，当某一个单元被摧毁后，便失去了该单元提供的能力</p>
+</li>
+</ul>
+<p>目前进度基本上就这么多，不过框架已经搭好，接下来的主要工作（大体如此，可能会有不小的变化）：</p>
+<ol>
+<li><p>开发更多不同效果的单元</p>
+<p> 几个想法：</p>
+<ol>
+<li>直接改变攻击手段的攻击单元</li>
+<li>强化其他相邻单元的辅助单元</li>
+<li>带来额外效果的辅助单元</li>
+<li>改变玩家属性的能量单元</li>
+<li>改变玩家移动方式的能量单元（飞行？）</li>
+<li>……（后续继续补充）</li>
+</ol>
+</li>
+<li><p>完善装备单元的限制（一定要有一定的限制，才能使玩家获得成就感），比如：</p>
+<ol>
+<li>一个能量单元可以为周围几个供能（如果没有能量，则这个单元不会生效）</li>
+<li>一个单元只能放在其他单元的相邻位置，不能随意摆放</li>
+<li>背包有数量限制，不能无限制携带备用单元（需要玩家进行取舍）</li>
+</ol>
+</li>
+<li><p>随机地图生成</p>
+<p> 类似以撒的结合房间系统，这样在清理完房间后，玩家有喘息的机会，来重新调整自己的构筑</p>
+</li>
+<li><p>添加敌人种类</p>
+<p> 敌人和主角一样都是由不同单元组合而成</p>
+</li>
+<li><p>添加击败敌人产出逻辑</p>
+<p> 随机产出单元 + Boss 身上装备的单元</p>
+</li>
+<li><p>单元具备等级概念，可升级（待定）</p>
+</li>
+<li><p>多个单元可合成（待定）</p>
+</li>
+<li><p>多个单元产生套装效果，或设计多个不同流派的单元构筑（待定）</p>
+</li>
+</ol>
+<p>至此，这篇日志就接近尾声了，写这篇日志的目的有三：</p>
+<ol>
+<li><p>整理总结开发这款 demo 的心路历程，以及它的初衷、主题、特点、玩法等核心内容，时刻提醒自己，避免后续跑题</p>
+</li>
+<li><p>日志有 1 就有 2，督促自己抓紧时间继续往后进行</p>
+</li>
+<li><p>与广大小伙伴交流，集思广益，看玩法或者特点是否存在致命缺陷</p>
+</li>
+</ol>
+<p>感谢大家的耐心阅读，这里是 Rayan，关注我跟进后续开发内容。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>坚持原创、翻译 技术文章|心得体会|日常笔记，您的支持将鼓励我继续创作！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpeg" alt="Rayan 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpeg" alt="Rayan 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91%E6%97%A5%E5%BF%97/" rel="tag"># 游戏开发日志</a>
+              <a href="/tags/Unity3D/" rel="tag"># Unity3D</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1/" rel="tag"># 游戏设计</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/15/AStar%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/" rel="prev" title="AStar算法实现">
+      <i class="fa fa-chevron-left"></i> AStar算法实现
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#【开发日志】游戏-Demo-开发日志-1（暂未定游戏名称）"><span class="nav-number">1.</span> <span class="nav-text">【开发日志】游戏 Demo 开发日志 1（暂未定游戏名称）</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Rayan</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yangruihan" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yangruihan" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:coderyrh9236@gmail.com" title="E-Mail → mailto:coderyrh9236@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/chilam9236" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;chilam9236" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.instagram.com/yangruihan36" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;yangruihan36" rel="noopener" target="_blank"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rayan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
